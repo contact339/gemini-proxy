@@ -2,14 +2,14 @@
 
 export default async function handler(request, response) {
   // 1. Récupérer la vraie clé API (stockée en secret sur Vercel)
-  // Ne mettez PAS votre clé ici.
   const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
   
   if (!GEMINI_API_KEY) {
      return response.status(500).json({ error: 'Clé API non configurée sur le serveur proxy.' });
   }
 
-  const GEMINI_API_URL = `https://generativelangugage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+  // ✅ CORRIGÉ : Faute de frappe dans "language"
+  const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
   // 2. Vérifier que c'est une requête POST
   if (request.method !== 'POST') {
@@ -35,7 +35,7 @@ export default async function handler(request, response) {
     response.status(200).json(data);
 
   } catch (error) {
-    console.error('Erreur du proxy:', error);
+    console.error('Erreur du proxy:', error.message);
     response.status(500).json({ error: "Erreur lors de la communication avec l'API Gemini." });
   }
 }
